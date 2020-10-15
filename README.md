@@ -38,7 +38,8 @@ type Builder interface {
 type TransformHandler func(SrcMap FieldMap) interface{}
 ````
 TransformHandler is a callback with input is `FieldMap` of source object,
-and returns a field of destination object
+and returns a field of destination object.\
+You can be ignored mapping a field with Handler `automapper.Ignore` 
 #### FieldMap
 FieldMap is the map of `reflect.Value` with key is field name.\
 You can call method `Field(fieldName string)` for a get value of field corresponding.\
