@@ -35,7 +35,7 @@ func TestAutoMapper_Transform(t *testing.T) {
 	}).Set("age", Ignore).Build()
 	p := &Person{Age: 22, FirstName: firstName, LastName: lastName, User: User{Username: username}}
 	e := new(Employee)
-	err := mapper.Transform(p, e)
+	err := mapper.Mapping(p, e)
 	if err != nil {
 		t.Error(err.Error())
 	}

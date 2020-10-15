@@ -12,7 +12,7 @@ type AutoMapper struct {
 	srcTemplateType reflect.Type
 }
 
-func (atm *AutoMapper) Transform(src interface{}, dst interface{}) error {
+func (atm *AutoMapper) Mapping(src interface{}, dst interface{}) error {
 	err := &InvalidMappingError{SrcType: reflect.TypeOf(src), DstType: reflect.TypeOf(dst)}
 	if !CompareType(src, atm.srcTemplateType) ||
 		!CompareType(dst, atm.dstTemplateType) ||
