@@ -27,8 +27,8 @@ type Builder interface {
 }
 ```
 > `Set` for setup custom transform handler,
-> receive field name of destination struct and a transform handler corresponding.
-> Default, Automapper will search field with a name corresponding in the source struct and transfer it to destination field,
+> receive field name of destination object and a transform handler corresponding.
+> Default, Automapper will search field with a name corresponding in the source object and transfer it to destination field,
 > if this field does not exist destination field will be received default value.\
 > You can call this function  multiple times before call function Build.
 >
@@ -37,8 +37,8 @@ type Builder interface {
 ```Go
 type TransformHandler func(SrcMap FieldMap) interface{}
 ````
-TransformHandler is a callback with input is `FieldMap` of source struct,
-and returns a field of destination struct
+TransformHandler is a callback with input is `FieldMap` of source object,
+and returns a field of destination object
 #### FieldMap
 FieldMap is the map of `reflect.Value` with key is field name.\
 You can call method `Field(fieldName string)` for a get value of field corresponding.\
