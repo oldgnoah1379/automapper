@@ -46,7 +46,7 @@ func main() {
 	}).Set("age", automapper.Ignore).Build()
 	p := &Person{Age: 22, FirstName: "Nguyen Hai", LastName: "Hoang", User: User{Username: "hoangnh"}}
 	e := new(Employee)
-	err := mapper.Transform(p, e)
+	err := mapper.Mapping(p, e)
 	if err != nil{
 		panic(err.Error())
 	}
