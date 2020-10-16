@@ -1,15 +1,30 @@
 package automapper
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 type FieldMap map[string]reflect.Value
 
-func NewFieldMap(obj interface{}) FieldMap {
-	v := reflect.ValueOf(obj).Elem()
-	t := reflect.TypeOf(obj).Elem()
+func NewFieldMapFormPointer(ptr interface{}) FieldMap {
+	v := reflect.ValueOf(ptr).Elem()
+	t := reflect.TypeOf(ptr).Elem()
 	result := make(map[string]reflect.Value)
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
+		fmt.Println(field.Tag)
+		result[field.Tag.Get(TAG)] = v.Field(i)
+	}
+	return result
+}
+
+func NewFieldMapFromValue(v reflect.Value) FieldMap {
+	t := v.Type()
+	result := make(map[string]reflect.Value)
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		//fmt.Println(field.Tag)
 		result[field.Tag.Get(TAG)] = v.Field(i)
 	}
 	return result
