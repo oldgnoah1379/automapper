@@ -54,6 +54,9 @@ func (f FieldMap) Interface(fieldName string) interface{}
 ```
 You can't `Set` value for variable you get from FieldMap, it not references to source object, any attempt to change it will cause panic.\
 This is to make sure the source object will not be changed after mapping.
+#### AutoMapper
+`Mapping(src interface{}, dst interface{}) error` for mapping object-to-object\
+`ListMapping(src interface{}, dst interface{}) error` for mapping slice-to-slice
 ## Example
 ```Go
 package main
