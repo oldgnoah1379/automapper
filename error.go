@@ -92,7 +92,7 @@ func IsDifferentTypeError(action string, many bool, srcType, dstType, srcTmpl, d
 	if many {
 		description += "[]"
 	}
-	description += srcType.String()
+	description += dstType.String()
 	if dstType != dstTmpl {
 		description += Invalid
 		err = true
