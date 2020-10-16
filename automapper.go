@@ -41,15 +41,15 @@ func (atm AutoMapper) Mapping(src interface{}, dst interface{}) error {
 	dstValue := reflect.ValueOf(dst)
 	srcValue := reflect.ValueOf(src)
 
-	err := GetNilError(action, srcValue, dstValue)
+	err := IsNilOrInvalidError(action, srcValue, dstValue)
 	if err != nil {
 		return err
 	}
-	err = GetNotPointerError(action, srcValue.Type(), dstValue.Type())
+	err = IsNotPointerError(action, srcValue.Type(), dstValue.Type())
 	if err != nil {
 		return err
 	}
-	err = GetDifferentTypeError(action, false, srcValue.Type().Elem(), dstValue.Type().Elem(),
+	err = IsDifferentTypeError(action, false, srcValue.Type().Elem(), dstValue.Type().Elem(),
 		atm.srcTemplateType, atm.dstTemplateType)
 	if err != nil {
 		return err
@@ -62,15 +62,15 @@ func (atm *AutoMapper) ListMapping(src interface{}, dst interface{}) error {
 	action := "ListMapping"
 	dstValue := reflect.ValueOf(dst)
 	srcValue := reflect.ValueOf(src)
-	err := GetNilError(action, srcValue, dstValue)
+	err := IsNilOrInvalidError(action, srcValue, dstValue)
 	if err != nil {
 		return err
 	}
-	err = GetNotListError(action, srcValue.Type(), dstValue.Type())
+	err = IsNotListError(action, srcValue.Type(), dstValue.Type())
 	if err != nil {
 		return err
 	}
-	err = GetDifferentTypeError(action, true, srcValue.Type().Elem(), dstValue.Type().Elem(),
+	err = IsDifferentTypeError(action, true, srcValue.Type().Elem(), dstValue.Type().Elem(),
 		atm.srcTemplateType, atm.dstTemplateType)
 	if err != nil {
 		return err
