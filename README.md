@@ -39,7 +39,14 @@ type TransformHandler func(SrcMap FieldMap) interface{}
 ````
 TransformHandler is a callback with input is `FieldMap` of source object,
 and returns a field of destination object.\
-You can be ignored mapping a field with Handler `automapper.Ignore` 
+###### Handler
+`automapper.Ignore` will be ignored mapping a field corresponding.\
+ `automapper.Default` is default handler for all fields. 
+###### Util
+`automapper.Condition` first param is condition callback `func(SrcMap FieldMap) bool `\
+if condition true, will execute TransformHandler is second param(if this param is nil, execute Default),
+if condition false, execute Ignore
+
 #### FieldMap
 FieldMap is the map of `reflect.Value` with key is field name.\
 You can call method `Field(fieldName string)` for a get value of field corresponding.\
