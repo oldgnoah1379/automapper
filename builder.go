@@ -1,6 +1,8 @@
 package automapper
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type Builder interface {
 	Set(fieldName string, transform TransformHandler) Builder
@@ -25,5 +27,12 @@ func NewBuilder(srcTemplate interface{}, dstTemplate interface{}) Builder {
 	result.mapper.srcTemplateType = reflect.TypeOf(srcTemplate)
 	result.mapper.dstTemplateType = reflect.TypeOf(dstTemplate)
 	result.mapper.transforms = make(map[string]TransformHandler)
+	for i := 0; i < result.mapper.dstTemplateType.NumField(); i++ {
+		fieldName := result.mapper.dstTemplateType.Field(i).Tag.Get(TAG)
+		if len(fieldName) < 1 {
+			continue
+		}
+		result.mapper.transforms[fieldName] = Default
+	}
 	return result
 }
