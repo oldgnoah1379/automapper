@@ -19,13 +19,13 @@ func GetErrorDescription(action, description string) string {
 }
 
 func IsNilOrInvalidError(action string, srcValue, dstValue reflect.Value) error {
-	description := srcValue.String()
+	description := srcValue.Type().String()
 	err := false
 	if !srcValue.IsValid() || srcValue.IsNil() {
 		description += Invalid
 		err = true
 	}
-	description += "," + dstValue.String()
+	description += "," + dstValue.Type().String()
 	if !dstValue.IsValid() || dstValue.IsNil() {
 		description += Invalid
 		err = true
