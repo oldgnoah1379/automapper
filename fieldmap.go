@@ -1,7 +1,6 @@
 package automapper
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -13,8 +12,11 @@ func NewFieldMapFormPointer(ptr interface{}) FieldMap {
 	result := make(map[string]reflect.Value)
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
-		fmt.Println(field.Tag)
-		result[field.Tag.Get(TAG)] = v.Field(i)
+		fieldName := field.Tag.Get(TAG)
+		if len(fieldName) < 1 {
+			continue
+		}
+		result[fieldName] = v.Field(i)
 	}
 	return result
 }
@@ -24,8 +26,11 @@ func NewFieldMapFromValue(v reflect.Value) FieldMap {
 	result := make(map[string]reflect.Value)
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
-		//fmt.Println(field.Tag)
-		result[field.Tag.Get(TAG)] = v.Field(i)
+		fieldName := field.Tag.Get(TAG)
+		if len(fieldName) < 1 {
+			continue
+		}
+		result[fieldName] = v.Field(i)
 	}
 	return result
 }
