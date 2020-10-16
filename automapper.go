@@ -13,20 +13,25 @@ type AutoMapper struct {
 }
 
 func (atm AutoMapper) mapping(srcMap, dstMap FieldMap) {
-	ign := reflect.ValueOf(Ignore)
 	for tag, field := range dstMap {
 		handler, ok := atm.transforms[tag]
-		if ok {
-			if reflect.ValueOf(handler) != ign {
-				value := handler(srcMap)
-				field.Set(reflect.ValueOf(value))
+		handlerValue := reflect.ValueOf(handler)
+		if ok &&
+			handler != nil &&
+			handlerValue != ignoreHandlerValue &&
+			handlerValue != defaultHandlerValue {
+			value := reflect.ValueOf(handler(srcMap))
+			if value == ignoreHandlerValue {
+				continue
 			}
-			continue
+			if value != defaultHandlerValue {
+				field.Set(value)
+				continue
+			}
 		}
 		srcValue, ok := srcMap[tag]
 		if ok {
 			field.Set(srcValue)
-			continue
 		}
 	}
 }
@@ -71,7 +76,7 @@ func (atm *AutoMapper) ListMapping(src interface{}, dst interface{}) error {
 		return err
 	}
 	dstMax := dstValue.Len()
-	srcMax := dstValue.Len()
+	srcMax := srcValue.Len()
 	max := dstMax
 	if srcMax < dstMax {
 		max = srcMax
