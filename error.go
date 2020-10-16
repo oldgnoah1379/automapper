@@ -15,7 +15,7 @@ var (
 )
 
 func GetErrorDescription(action, description string) string {
-	return "automapper: " + action + "(" + description + ")"
+	return "automapper." + action + "(" + description + ")"
 }
 
 func IsNilOrInvalidError(action string, srcValue, dstValue reflect.Value) error {
@@ -80,20 +80,23 @@ func IsNotListError(action string, srcType, dstType reflect.Type) error {
 func IsDifferentTypeError(action string, many bool, srcType, dstType, srcTmpl, dstTmpl reflect.Type) error {
 	description := ""
 	err := false
+	if many {
+		description += "[]"
+	}
+	description += srcType.String()
 	if srcType != srcTmpl {
-		if many {
-			description += "isn't []"
-		}
+		description += Invalid
 		err = true
 	}
-	description += srcTmpl.String() + ","
+	description += ","
+	if many {
+		description += "[]"
+	}
+	description += srcType.String()
 	if dstType != dstTmpl {
-		if many {
-			description += "[]"
-		}
+		description += Invalid
 		err = true
 	}
-	description += dstTmpl.String()
 	if err {
 		return errors.WithMessage(IsDifferentType, GetErrorDescription(action, description))
 	} else {

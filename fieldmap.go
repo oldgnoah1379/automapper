@@ -1,6 +1,7 @@
 package automapper
 
 import (
+	"github.com/pkg/errors"
 	"reflect"
 )
 
@@ -38,8 +39,7 @@ func NewFieldMapFromValue(v reflect.Value) FieldMap {
 func (f FieldMap) Field(fieldName string) reflect.Value {
 	v, ok := f[fieldName]
 	if !ok {
-		exist := &DoesNotExist{fieldName: fieldName}
-		panic(exist.Error())
+		panic(errors.WithMessage(DoesNotExist, "field "+fieldName).Error())
 	}
 	var r = v.Interface()
 	return reflect.ValueOf(r)
