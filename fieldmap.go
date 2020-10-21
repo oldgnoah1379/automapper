@@ -5,66 +5,59 @@ import (
 	"reflect"
 )
 
-type FieldMap map[string]reflect.Value
-
-func NewFieldMapFormPointer(ptr interface{}) FieldMap {
-	v := reflect.ValueOf(ptr).Elem()
-	t := reflect.TypeOf(ptr).Elem()
-	result := make(map[string]reflect.Value)
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		fieldName := field.Tag.Get(TAG)
-		if len(fieldName) < 1 {
-			continue
-		}
-		result[fieldName] = v.Field(i)
-	}
-	return result
+type TransformHandler func(SrcMap FieldMap) interface{}
+type FieldMap struct {
+	elements map[string]reflect.Value
 }
 
-func NewFieldMapFromValue(v reflect.Value) FieldMap {
-	t := v.Type()
-	result := make(map[string]reflect.Value)
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		fieldName := field.Tag.Get(TAG)
-		if len(fieldName) < 1 {
-			continue
+func (fm FieldMap) Mapping(SrcMap FieldMap, transformers map[string]TransformHandler) {
+	for name, field := range fm.elements {
+		handler, ok := transformers[name]
+		if ok {
+			value := reflect.ValueOf(handler(SrcMap))
+			if !isIgnore(value) {
+				field.Set(value)
+			}
 		}
-		result[fieldName] = v.Field(i)
 	}
-	return result
 }
 
-func (f FieldMap) Field(fieldName string) reflect.Value {
-	v, ok := f[fieldName]
+func (fm FieldMap) Field(identifier string) reflect.Value {
+	v, ok := fm.elements[identifier]
 	if !ok {
-		panic(errors.WithMessage(DoesNotExist, "field "+fieldName).Error())
+		panic(errors.WithMessage(IdentifierNotFound, identifier))
 	}
-	var r = v.Interface()
-	return reflect.ValueOf(r)
+	return reflect.ValueOf(v.Interface())
 }
 
-func (f FieldMap) String(fieldName string) string {
-	return f.Field(fieldName).String()
+func (fm FieldMap) String(identifier string) string {
+	return fm.Field(identifier).String()
 }
 
-func (f FieldMap) Int(fieldName string) int {
-	return int(f.Field(fieldName).Int())
+func (fm FieldMap) Int64(identifier string) int64 {
+	return fm.Field(identifier).Int()
 }
 
-func (f FieldMap) Float(fieldName string) float64 {
-	return f.Field(fieldName).Float()
+func (fm FieldMap) Int(identifier string) int {
+	return int(fm.Field(identifier).Int())
 }
 
-func (f FieldMap) Bytes(fieldName string) []byte {
-	return f.Field(fieldName).Bytes()
+func (fm FieldMap) Float(identifier string) float64 {
+	return fm.Field(identifier).Float()
 }
 
-func (f FieldMap) Bool(fieldName string) bool {
-	return f.Field(fieldName).Bool()
+func (fm FieldMap) Complex(identifier string) complex128 {
+	return fm.Field(identifier).Complex()
 }
 
-func (f FieldMap) Interface(fieldName string) interface{} {
-	return f.Field(fieldName).Interface()
+func (fm FieldMap) Bytes(identifier string) []byte {
+	return fm.Field(identifier).Bytes()
+}
+
+func (fm FieldMap) Bool(identifier string) bool {
+	return fm.Field(identifier).Bool()
+}
+
+func (fm FieldMap) Interface(identifier string) interface{} {
+	return fm.Field(identifier).Interface()
 }
