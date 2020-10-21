@@ -43,7 +43,7 @@ Make a mapper via the `profile`, and the public fields' names.\
 The `profile` is a `map[string]string` with keys are the names of the destination fields and values are the names of source fields are mapped together.\
 The parameter `identifier` is the public name of the field.\
 Default, the fields of the destination object will be mapping with fields of the source object via values defined in the `profile`.\
-It `panic` if the type of the source field different type of the destination field.
+It `panic`if the types of the source's fields different from the types of the destination fields.
 
 ## Template
 ```Go
