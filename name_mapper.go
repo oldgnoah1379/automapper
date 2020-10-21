@@ -34,6 +34,9 @@ func (nm *NameMapper) SetProfile(profile map[string]string) error {
 		if nm.template.indexOfSrcFieldName(srcFieldName) < 0 {
 			return errors.WithMessage(DoesNotExist, nm.template.src.String()+"."+srcFieldName)
 		}
+		if _, ok := nm.transformers[dstFieldName]; ok {
+			continue
+		}
 		nm.transformers[dstFieldName] = FromField(srcFieldName)
 	}
 	return nil
